@@ -23,12 +23,14 @@ HashTable* new_hash_table() {
 
 void ht_insert(HashTable* ht, const char* k, const char* v) {
     HashItem* h = new_hash_item(k, v);
-    int idx = get_hash(k, ht->capacity, 0);
+    int idx = get_hash(h->key, ht->capacity, 0);
 
     HashItem* curr = ht->items[idx];
-    for (int i = 1; curr != NULL; i++) {  // Resolve collisions
-        idx = get_hash(k, ht->capacity, i);
+    int i = 1;
+    while (curr != NULL && curr != &HT_DELETED_ITEM) {
+        idx = get_hash(h->key, ht->capacity, i);
         curr = ht->items[idx];
+        i++;
     }
 
     ht->items[idx] = h;
@@ -37,29 +39,38 @@ void ht_insert(HashTable* ht, const char* k, const char* v) {
 
 char* ht_search(HashTable* ht, const char* k) {
     int idx = get_hash(k, ht->capacity, 0);
-    HashItem* curr = ht->items[idx];
 
-    for (int i = 1; curr != NULL; i++) {
-        if (strcmp(k, curr->key) == 0) {
-            return curr->value;
+    HashItem* curr = ht->items[idx];
+    int i = 1;
+    while (curr != NULL) {
+        if (curr != &HT_DELETED_ITEM) {
+            if (strcmp(k, curr->key) == 0) {
+                return curr->value;
+            }
         }
+
         idx = get_hash(k, ht->capacity, i);
         curr = ht->items[idx];
+        i++;
     }
     return NULL;
 }
 
 void ht_delete(HashTable* ht, const char* k) {
     int idx = get_hash(k, ht->capacity, 0);
-    HashItem* curr = ht->items[idx];
 
-    for (int i = 1; curr != NULL; i++) {
-        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
-            delete_hash_item(curr);
-            ht->items[idx] = &HT_DELETED_ITEM;
+    HashItem* curr = ht->items[idx];
+    int i = 1;
+    while (curr != NULL) {
+        if (curr != &HT_DELETED_ITEM) {
+            if (strcmp(k, curr->key) == 0) {
+                delete_hash_item(curr);
+                ht->items[idx] = &HT_DELETED_ITEM;
+            }
         }
         idx = get_hash(k, ht->capacity, i);
         curr = ht->items[idx];
+        i++;
     }
     ht->size--;
 }
