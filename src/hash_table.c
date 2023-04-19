@@ -1,6 +1,7 @@
 #include "./hash_table.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -32,7 +33,7 @@ void ht_insert(HashTable* ht, const char* k, const char* v) {
         curr = ht->items[idx];
         i++;
     }
-
+    printf("Inserting at %d\n", idx);
     ht->items[idx] = h;
     ht->size++;
 }
@@ -73,6 +74,19 @@ void ht_delete(HashTable* ht, const char* k) {
         i++;
     }
     ht->size--;
+}
+
+void ht_print(HashTable* ht, const int show_empty) {
+    printf("{\n");
+    for (int i = 0; i < ht->capacity; i++) {
+        HashItem* h = ht->items[i];
+        if (h == NULL) {
+            printf("\t(null) : (null),\n");
+        } else {
+            printf("\t%s : %s,\n", h->key, h->value);
+        }
+    }
+    printf("}\n");
 }
 
 void delete_hash_table(HashTable* ht) {
