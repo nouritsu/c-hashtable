@@ -10,6 +10,9 @@ static void delete_hash_item(HashItem*);
 static int get_hash(const char*, const int, const int);
 static int hash(const char*, const int, const int);
 
+// Deleted Item Bucket
+static HashItem HT_DELETED_ITEM = {NULL, NULL};
+
 HashTable* new_hash_table() {
     HashTable* ht = malloc(sizeof(HashTable));
     ht->capacity = BASE_TABLE_SIZE;
@@ -21,9 +24,16 @@ HashTable* new_hash_table() {
 void ht_insert(HashTable* ht, const char* k, const char* v) {
     HashItem* h = new_hash_item(k, v);
     int idx = get_hash(k, ht->capacity, 0);
-
     HashItem* curr = ht->items[idx];
-    for (int i = 1; curr != NULL; i++) {  // Resolve collisions
+
+    // Resolve Collisions
+    for (int i = 1; curr != NULL && curr != &HT_DELETED_ITEM; i++) {
+        // Update value if already exists
+        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
+            delete_hash_item(curr);
+            ht->items[idx] = h;
+            return;
+        }
         idx = get_hash(k, ht->capacity, i);
         curr = ht->items[idx];
     }
@@ -37,13 +47,28 @@ char* ht_search(HashTable* ht, const char* k) {
     HashItem* curr = ht->items[idx];
 
     for (int i = 1; curr != NULL; i++) {
-        if (strcmp(k, curr->key) == 0) {
+        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
             return curr->value;
         }
         idx = get_hash(k, ht->capacity, i);
         curr = ht->items[idx];
     }
     return NULL;
+}
+
+void ht_delete(HashTable* ht, const char* k) {
+    int idx = get_hash(k, ht->capacity, 0);
+    HashItem* curr = ht->items[idx];
+
+    for (int i = 1; curr != NULL; i++) {
+        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
+            delete_hash_item(curr);
+            ht->items[idx] = &HT_DELETED_ITEM;
+        }
+        idx = get_hash(k, ht->capacity, i);
+        curr = ht->items[idx];
+    }
+    ht->size--;
 }
 
 void delete_hash_table(HashTable* ht) {

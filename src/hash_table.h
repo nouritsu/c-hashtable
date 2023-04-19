@@ -1,4 +1,4 @@
-#define BASE_TABLE_SIZE 32
+#define BASE_TABLE_SIZE 8
 #define HT_PRIME1 151
 #define HT_PRIME2 131
 
