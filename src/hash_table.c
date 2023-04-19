@@ -18,6 +18,34 @@ HashTable* new_hash_table() {
     return ht;
 }
 
+void ht_insert(HashTable* ht, const char* k, const char* v) {
+    HashItem* h = new_hash_item(k, v);
+    int idx = get_hash(k, ht->capacity, 0);
+
+    HashItem* curr = ht->items[idx];
+    for (int i = 1; curr != NULL; i++) {  // Resolve collisions
+        idx = get_hash(k, ht->capacity, i);
+        curr = ht->items[idx];
+    }
+
+    ht->items[idx] = h;
+    ht->size++;
+}
+
+char* ht_search(HashTable* ht, const char* k) {
+    int idx = get_hash(k, ht->capacity, 0);
+    HashItem* curr = ht->items[idx];
+
+    for (int i = 1; curr != NULL; i++) {
+        if (strcmp(k, curr->key) == 0) {
+            return curr->value;
+        }
+        idx = get_hash(k, ht->capacity, i);
+        curr = ht->items[idx];
+    }
+    return NULL;
+}
+
 void delete_hash_table(HashTable* ht) {
     for (int i = 0; i < ht->capacity; i++) {
         HashItem* h = ht->items[i];
@@ -29,7 +57,7 @@ void delete_hash_table(HashTable* ht) {
     free(ht);
 }
 
-// Used to deal with collisions
+// Get rid of collisions
 static int get_hash(const char* s, const int bucket_count, const int attempt) {
     const int h1 = hash(s, HT_PRIME1, bucket_count);
     const int h2 = hash(s, HT_PRIME2, bucket_count);
