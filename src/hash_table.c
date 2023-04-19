@@ -15,7 +15,7 @@ static HashItem HT_DELETED_ITEM = {NULL, NULL};
 
 HashTable* new_hash_table() {
     HashTable* ht = malloc(sizeof(HashTable));
-    ht->capacity = BASE_TABLE_SIZE;
+    ht->capacity = HT_BASE_CAPACITY;
     ht->size = 0;
     ht->items = calloc(ht->capacity, sizeof(HashItem));
     return ht;
@@ -24,16 +24,9 @@ HashTable* new_hash_table() {
 void ht_insert(HashTable* ht, const char* k, const char* v) {
     HashItem* h = new_hash_item(k, v);
     int idx = get_hash(k, ht->capacity, 0);
-    HashItem* curr = ht->items[idx];
 
-    // Resolve Collisions
-    for (int i = 1; curr != NULL && curr != &HT_DELETED_ITEM; i++) {
-        // Update value if already exists
-        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
-            delete_hash_item(curr);
-            ht->items[idx] = h;
-            return;
-        }
+    HashItem* curr = ht->items[idx];
+    for (int i = 1; curr != NULL; i++) {  // Resolve collisions
         idx = get_hash(k, ht->capacity, i);
         curr = ht->items[idx];
     }
@@ -47,7 +40,7 @@ char* ht_search(HashTable* ht, const char* k) {
     HashItem* curr = ht->items[idx];
 
     for (int i = 1; curr != NULL; i++) {
-        if (curr != &HT_DELETED_ITEM && strcmp(k, curr->key) == 0) {
+        if (strcmp(k, curr->key) == 0) {
             return curr->value;
         }
         idx = get_hash(k, ht->capacity, i);
