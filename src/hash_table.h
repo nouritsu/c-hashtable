@@ -1,3 +1,6 @@
+#ifndef HASH_MAP_H
+#define HASH_MAP_H
+
 #define HT_BASE_CAPACITY 53  // Prime number to reduce collisions
 #define HT_PRIME1 151
 #define HT_PRIME2 163
@@ -19,3 +22,5 @@ char* ht_search(HashTable* ht, const char* k);
 void ht_delete(HashTable* ht, const char* k);
 void ht_print(HashTable* ht, const int show_empty);
 void delete_hash_table(HashTable* ht);
+
+#endif
