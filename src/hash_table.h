@@ -14,8 +14,8 @@ typedef struct {
 } HashTable;
 
 HashTable* new_hash_table();
-void ht_insert(HashTable*, const char*, const char*);
-char* ht_search(HashTable*, const char*);
-void ht_delete(HashTable*, const char*);
-void ht_print(HashTable*, const int);
-void delete_hash_table(HashTable*);
+void ht_insert(HashTable* ht, const char* k, const char* v);
+char* ht_search(HashTable* ht, const char* k);
+void ht_delete(HashTable* ht, const char* k);
+void ht_print(HashTable* ht, const int show_empty);
+void delete_hash_table(HashTable* ht);
