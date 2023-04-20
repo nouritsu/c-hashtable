@@ -126,9 +126,9 @@ void ht_print(HashTable* ht, const int show_empty) {
     printf("{\n");
     for (int i = 0; i < ht->capacity; i++) {
         HashItem* h = ht->items[i];
-        if (h == NULL && show_empty) {
+        if ((h == NULL || h == &HT_DELETED_ITEM) && show_empty) {
             printf("\t(null) : (null),\n");
-        } else if (h != NULL) {
+        } else if (h != NULL && h != &HT_DELETED_ITEM) {
             printf("\t%s : %s,\n", h->key, h->value);
         }
     }
