@@ -3,6 +3,26 @@ A simple string:string HashTable implementation in C.
 Made it by following this [guide](https://github.com/jamesroutley/write-a-hash-table), helped me better understand how hash tables and hash functions work.  
 Not intended for professional use.
 
+# Usage
+## In your project
+To use, download the repository and copy all files except main.c from src over to your project directory.  
+Then include hash_table.h in your project and that's it!  
+
+## Just to test
+Download repository, run build.py using Python 3.XX to run build script  
+Executable will be in `<repository>/bin`
+Build and run -
+```
+python build.py run
+```
+Just build -
+```
+python build.py
+```
+Done!
+
+
+
 # Complexities
 ## Time
 | Operation 	| Best 	| Worst 	| Average 	|
