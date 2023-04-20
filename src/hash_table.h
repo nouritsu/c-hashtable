@@ -1,6 +1,6 @@
-#define HT_BASE_CAPACITY 11  // Prime number to reduce collisions
-#define HT_PRIME1 131
-#define HT_PRIME2 137
+#define HT_BASE_CAPACITY 53  // Prime number to reduce collisions
+#define HT_PRIME1 151
+#define HT_PRIME2 163
 #define HT_UPSIZE_LOAD 70
 #define HT_DOWNSIZE_LOAD 10
 

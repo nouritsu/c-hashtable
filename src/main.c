@@ -6,7 +6,7 @@
 int main(void) {
     HashTable* ht = new_hash_table();
     ht_insert(ht, "Aneesh", "Bhave");
-    ht_print(ht, 1);
+    ht_print(ht, 0);
     ht_insert(ht, "Neo", "Fernandes");
     ht_print(ht, 1);
     ht_insert(ht, "Manas", "Sathe");
